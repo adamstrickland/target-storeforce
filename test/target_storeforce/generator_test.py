@@ -13,7 +13,9 @@ def std_in_stream(messages):
 def test_persist_messages_csv_header(config_header, valid_message_stream_header, tmpdir):
     msg_file = tmpdir + "/DATA_NONPROD-DA3-V_STOREFORCE_POS.csv"
     messages = std_in_stream(valid_message_stream_header)
+
     persist_messages_csv(messages=messages, config=config_header.config, tempdir=tmpdir)
+
     with open(msg_file, "r") as file:
         assert (
             file.readline()
@@ -21,12 +23,13 @@ def test_persist_messages_csv_header(config_header, valid_message_stream_header,
         )
 
 
-def test_persist_messages_csv_header_mutiple(config_no_header_multistream,
-        raw_multiple_message_stream, tmpdir):
+def test_persist_messages_csv_header_mutiple(config_no_header_multistream, raw_multiple_message_stream, tmpdir):
     msg_file_1 = tmpdir + "/DATA_NONPROD-RAW_GLOBALRETAIL-PAT_TEST.csv"
     msg_file_2 = tmpdir + "/DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA.csv"
     messages = std_in_stream(raw_multiple_message_stream)
+
     persist_messages_csv(messages=messages, config=config_no_header_multistream.config, tempdir=tmpdir)
+
     with open(msg_file_1, "r") as file:
         assert file.readline() == "ID,COL_NEW,ANOTHER_COL,COL\n"
     with open(msg_file_2, "r") as file:
@@ -36,7 +39,9 @@ def test_persist_messages_csv_header_mutiple(config_no_header_multistream,
 def test_persist_messages_csv_no_header_file_rename(config_no_header, valid_message_stream_no_header, tmpdir):
     msg_file = tmpdir + "/DATA_NONPROD-DA3-V_STOREFORCE_POS_NO_HEADER.csv"
     messages = std_in_stream(valid_message_stream_no_header)
+
     persist_messages_csv(messages=messages, config=config_no_header.config, tempdir=tmpdir)
+
     with open(msg_file, "r") as file:
         # assert file.readline() == "27,2019-07-27T00:00:00+00:00,2019-07-27T14:00:00+00:00,4,868.00000,5,0,0.00000,0\n"
         assert file.readline() == "27,2019-07-27T00:00:00+00:00,2019-07-27T14:00:00+00:00,4,868.0,5,0,0.0,0\n"
