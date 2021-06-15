@@ -8,7 +8,7 @@ classifiers = ["Programming Language :: Python :: 3 :: Only"]
 name = "target-storeforce"
 description = "Singer target to send a CSV via SFTP to Storeforce"
 packages= [
-    { include = "target-storeforce", from = "src" },
+    { include = "target_storeforce", from = "src" },
 ]
 readme = "README.md"
 repository = "https://github.com/bonobos/target-storeforce"

@@ -1,0 +1,28 @@
+{
+    "file_type" : "CSV",
+    "start_date" : "2021-02-05",
+    "host" : "0.0.0.0",
+    "port" : 2222,
+    "header" : true,
+    "password" : "qweqwe",
+    "destination_path" : "/tests/data/tmp/",
+    "username" : "fakeusername",
+    "delimiter" : ",",
+    "quotechar" : "'",
+    "timestamp_file" : false,
+    "file_mapping": {
+      "stream_name": "DATA_NONPROFIT-DA3-V_STOREFORCE_POS",
+      "file_name": "pos.txt",
+      "output_map": [
+          "STORE_CODE",
+          "TRANS_DATE",
+          "TRANS_SLOT",
+          "SALE_TRANS",
+          "SALE_VALUE",
+          "SALE_UNITS",
+          "REFUND_TRANS",
+          "REFUND_VALUE",
+          "REFUND_UNITS"
+      ]
+    }
+}
