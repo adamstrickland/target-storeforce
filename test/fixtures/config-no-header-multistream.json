@@ -1,0 +1,13 @@
+{
+    "file_type" : "CSV",
+    "start_date" : "2021-02-05",
+    "host" : "localhost",
+    "port" : 2222,
+    "header" : true,
+    "password" : "password",
+    "destination_path" : "/tests/data/tmp/",
+    "username" : "n00b",
+    "delimiter" : ",",
+    "quotechar" : "'",
+    "timestamp_file" : false
+}
