@@ -1,0 +1,76 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.2
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - build-and-test:
+          name: build-and-test
+          context: deg-testing
+      - deploy:
+          name: deploy-package
+          context: aws-data-shared-services
+          filters:
+            branches:
+              only: master
+          requires:
+            - build-and-test
+
+jobs:
+  build-and-test: &base
+    docker:
+      image: circleci/python:3.9.4
+    # Some use cases (namely running a runtime-configured docker container with
+    # ports accessible to the primary) require the use of the machine executor.
+    # machine:
+    #   image: ubuntu-2004:202104-01
+    steps:
+      - checkout
+      - run:
+          name: Install poetry
+          command: |
+            make install-poetry
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Pull dependencies
+          command: make deps
+      - run:
+          name: Run tests
+          command: make ci
+      - run:
+          name: Check coverage
+          command: make coverage-report
+      - run:
+          name: Lint
+          command: make lint
+      # - run:
+      #     name: Create upload folder BEFORE starting docker-compose
+      #     command: mkdir -p .data/upload
+      # - run:
+      #     name: Start docker container
+      #     command: docker-compose up -d
+      # - run:
+      #     name: Run tests
+      #     environment:
+      #       SFTP_USERNAME: foo
+      #       SFTP_PASSWORD: pass
+      #     command: |
+      #       SFTP_URL=$(docker-compose port sftp 22) \
+      #       SFTP_HOST=$(echo $SFTP_URL | cut -d: -f1) \
+      #       SFTP_PORT=$(echo $SFTP_URL | cut -d: -f2) \
+      #       make ci
+  deploy:
+    <<: *base
+    description: Deploy the package to S3PyPi
+    steps:
+      - checkout
+      - run:
+          name: Install s3pypi
+          command: sudo pip install s3pypi
+      - run:
+          name: Release package
+          command: |
+            s3pypi --bucket deg-shared-services-pypi-us-east-1 --private --secret ${S3PYPI_SECRET}

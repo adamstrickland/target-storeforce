@@ -1,0 +1,83 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.poetry]
+authors = ["Bonobos DEG <deg@bonobos.com>"]
+classifiers = ["Programming Language :: Python :: 3 :: Only"]
+name = "target-storeforce"
+description = "Singer target to send a CSV via SFTP to Storeforce"
+packages= [
+    { include = "target-storeforce", from = "src" },
+]
+readme = "README.md"
+repository = "https://github.com/bonobos/target-storeforce"
+version = "0.1.0"
+
+# For some reason, pulling dependencies from Gemfury doesn't work.  Needs more
+# investigation.
+# [[tool.poetry.source]]
+# url = "https://pypi.fury.io/bonobos-eng"
+# name = "fury"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+singer-python = "~5.0.12"
+simplejson = "~3.11.1"
+bonobos-singer-support = { git = "git@github.com:bonobos/bonobos-singer-support.git", branch = "agts/initial" }
+
+[tool.poetry.dev-dependencies]
+coverage = {extras = ["toml"], version = "^5.5"}
+flakehell = "^0.9.0"
+pdbpp = "*"
+pytest = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+twine = "*"
+
+[tool.coverage.run]
+omit = ["*/.tox/*", "*/test/*"]
+source = ["src/"]
+
+[tool.pytest.ini_options]
+addopts = "-vxs -p no:warnings"
+testpaths = ["test/"]
+markers = [ "integration: uses running container" ]
+
+[tool.flakehell]
+exclude = [ ".git", ".tox", ".pytest_cache", "__pycache__", "docs/source/config.py", "build", "dist" ]
+extended_default_ignore = []
+format = "colored"
+max_line_length = 120
+show_source = true
+
+[tool.flakehell.plugins]
+pycodestyle = ["+*", "-E722", "-E126", "-W503", "-W504", "-F541"]
+
+[tool.flakehell.exceptions."__init__.py"]
+pycodestyle = ["-E302", "-E501", "-F401", "-F841"]
+
+[tool.flakehell.exceptions."test/*"]
+pycodestyle = ["-E501"]
+
+# including this for completeness, although this project does not
+# (currently) use tox
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py39
+skipsdist = True
+
+[testenv]
+setenv =
+    ENV = dev
+passenv =
+    ENV
+    HOME
+    PYTHONPATH
+allowlist_externals =
+    poetry
+    make
+commands =
+    make test-all
+"""
