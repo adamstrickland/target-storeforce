@@ -473,6 +473,20 @@ toml = "*"
 testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
+name = "pytest-deprecate"
+version = "1.0.2"
+description = "Mark tests as testing a deprecated feature with a warning note."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pytest = ">=4.4.0"
+
+[package.extras]
+dev = ["pre-commit", "mock"]
+
+[[package]]
 name = "pytest-mock"
 version = "3.6.1"
 description = "Thin-wrapper around the mock package for easier use with pytest"
@@ -700,7 +714,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "2f4accc7cde2c2d24da8ae7c1fe41883eae02136d1d3d6e61871c5d2fafe2e8b"
+content-hash = "af357d11df7b0dbefc7a948b0d56ed51ddbe530b13c817b46a4b021b21b605e8"
 
 [metadata.files]
 atomicwrites = [
@@ -985,6 +999,9 @@ pytest = [
 pytest-cov = [
     {file = "pytest-cov-2.12.1.tar.gz", hash = "sha256:261ceeb8c227b726249b376b8526b600f38667ee314f910353fa318caa01f4d7"},
     {file = "pytest_cov-2.12.1-py2.py3-none-any.whl", hash = "sha256:261bb9e47e65bd099c89c3edf92972865210c36813f80ede5277dceb77a4a62a"},
+]
+pytest-deprecate = [
+    {file = "pytest-deprecate-1.0.2.tar.gz", hash = "sha256:d147e1fb02d7ba131543b246354f0707ca9457640f8f02e2f2768e3662fb5e9f"},
 ]
 pytest-mock = [
     {file = "pytest-mock-3.6.1.tar.gz", hash = "sha256:40217a058c52a63f1042f0784f62009e976ba824c418cced42e88d5f40ab0e62"},

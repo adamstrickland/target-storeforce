@@ -6,41 +6,40 @@ from singer import utils
 from bonobos_singer_support.sftp import sftp_connection
 from target_storeforce.entrypoint import REQUIRED_CONFIG_KEYS
 
-# REQUIRED_CONFIG_KEYS = [
-#     "host",
-#     "port",
-#     "username",
-#     "password",
-#     "header",
-#     "delimiter",
-#     "quotechar",
-#     "destination_path",
-#     "file_type",
-# ]
+
+def patch_and_parse_args(monkeypatch, config_file):
+    args = ["pytest", "--config", config_file]
+
+    assert monkeypatch
+    monkeypatch.setattr("sys.argv", args)
+
+    return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_header(monkeypatch, tmpdir):
-    monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header.json"])
-    return utils.parse_args(REQUIRED_CONFIG_KEYS)
+    return patch_and_parse_args(monkeypatch, "test/fixtures/config-header.json")
+    # monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header.json"])
+    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_no_header(monkeypatch, tmpdir):
-    monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-no-header.json"])
-    return utils.parse_args(REQUIRED_CONFIG_KEYS)
+    return patch_and_parse_args(monkeypatch, "test/fixtures/config-no-header.json")
+    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_no_header_multistream(monkeypatch, tmpdir):
-    monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-no-header-multistream.json"])
-    return utils.parse_args(REQUIRED_CONFIG_KEYS)
+    return patch_and_parse_args(monkeypatch, "test/fixtures/config-no-header-multistream.json")
+    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_header_jsonl(monkeypatch, tmpdir):
-    monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header-jsonl.json"])
-    return utils.parse_args(REQUIRED_CONFIG_KEYS)
+    return patch_and_parse_args(monkeypatch, "test/fixtures/config-header-jsonl.json")
+    # monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header-jsonl.json"])
+    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture(autouse=True, scope="function")

@@ -23,11 +23,17 @@ REQUIRED_CONFIG_KEYS = [
 
 @singer.utils.handle_top_exception(LOGGER)
 def main():
+    LOGGER.info("Executing target-storeforce.entrypoint.main")
+
     args = utils.parse_args(REQUIRED_CONFIG_KEYS)
+    LOGGER.info(f"Configured target using args: {args}")
 
     target = Target(args.config)
+    LOGGER.info("Initialized Target")
 
+    LOGGER.info("Running Target")
     target.run(sys.stdin, sys.stdout)
+    LOGGER.info("Complete")
 
 
 if __name__ == "__main__":
