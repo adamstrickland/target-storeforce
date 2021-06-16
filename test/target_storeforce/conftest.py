@@ -19,8 +19,13 @@ def patch_and_parse_args(monkeypatch, config_file):
 
 
 @fixture
-def config_header(monkeypatch, tmpdir):
-    return patch_and_parse_args(monkeypatch, "test/fixtures/config-header.json")
+def config_header_file():
+    return "test/fixtures/config-header.json"
+
+
+@fixture
+def config_header(monkeypatch, tmpdir, config_header_file):
+    return patch_and_parse_args(monkeypatch, config_header_file)
 
 
 @fixture

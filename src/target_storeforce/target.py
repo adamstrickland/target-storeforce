@@ -1,3 +1,4 @@
+import os
 import io
 import sys
 import tempfile
@@ -40,16 +41,54 @@ class Target:
             self.output_state_to_stream([state], stream_out)
 
     def egress_file(self, path_to_data_file, destination_file_path=None):
-        def destfile(infile):
-            return "foobar"
+        """
+        Egress the data file at `path_to_data_file` to the SFTP destination.  If
+        the `destination_file_path` parameter is supplied, the function will
+        attempt to use that, extracting the directory & filename separately.
 
-        destination_folder_path = self.config.get("destination_path", DEFAULT_DESTINATION_FOLDER)
+        For the destination directory, the `default_destination_folder` is used
+        if `destination_file_path` is none or blank.  Otherwise, the extracted
+        directory is munged, such that any leading slashes are removed and there
+        is one and only one trailing slash, to conform to the expectations of
+        the sftp.Connection component.
 
-        destination_file_name = destfile(path_to_data_file)
+        For the destination filename, the name is extracted from the path and
+        used, if present; otherwise, the filename is extracted from the source
+        file (i.e. `path_to_data_file`), and that is used.
+
+        The following table outlines the outputs for given
+        `destination_file_path`, assuming a fixed `path_to_data_file` value of
+        "/data/outbound.csv"
+
+        |-----------------------|-----------------|----------------------|
+        | destination_file_path | destination dir | destination filename |
+        |-----------------------|-----------------|----------------------|
+        | <EMPTY>               | /               | outbound.csv         |
+        | None                  | /               | outbound.csv         |
+        | ""                    | /               | outbound.csv         |
+        | /                     | /               | outbound.csv         |
+        | foo                   | /               | foo                  |
+        | /foo                  | /               | foo                  |
+        | foo/                  | /foo            | outbound.csv         |
+        | /foo/                 | /foo            | outbound.csv         |
+        | foo/bar.csv           | /foo            | bar.csv              |
+        | /foo/bar.csv          | /foo            | bar.csv              |
+        | foo/bar/baz.csv       | /foo/bar        | baz.csv              |
+        | /foo/bar/baz.csv      | /foo/bar        | baz.csv              |
+        |-----------------------|-----------------|----------------------|
+
+        """
+
+        destparamdir = os.path.dirname(destination_file_path or '').strip('/')
+        destdir = f"{destparamdir}{DEFAULT_DESTINATION_FOLDER}"
+
+        destparamfile = os.path.basename(destination_file_path or '')
+        srcfile = os.path.basename(path_to_data_file)
+        destfile = destparamfile if destparamfile else srcfile
 
         self.connection.put_file(file=path_to_data_file,
-                                 destination_path=destination_folder_path,
-                                 fname=destination_file_name,)
+                                 destination_path=destdir,
+                                 fname=destfile,)
 
     def output_state_to_stream(self, states, stream):
         for state in states:
