@@ -76,7 +76,7 @@ singer-python = "~5.0.12"
 type = "git"
 url = "git@github.com:bonobos/bonobos-singer-support.git"
 reference = "agts/initial"
-resolved_reference = "79df01871837297904069c686982ddb5805018ef"
+resolved_reference = "c6d28eb5fab87659b37a5c89ba027bee30d2d255"
 
 [[package]]
 name = "certifi"
