@@ -50,6 +50,7 @@ def generate_csv_from_messages(messages, config, tempdir):
     validators = {}
     headers = {}
     filename = ""
+    filepath = None
     output_map = None
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     timestamp_file_part = "_" + timestamp if do_timestamp_file else ""

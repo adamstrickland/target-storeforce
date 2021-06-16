@@ -3,11 +3,12 @@ import io
 import pytest
 
 from target_storeforce.generator import persist_messages_csv
+from target_storeforce.target import ENCODING
 
 
 def std_in_stream(messages):
-    in_stream = io.BytesIO(messages.encode("utf-8"))
-    return io.TextIOWrapper(in_stream, encoding="utf-8")
+    in_stream = io.BytesIO(messages.encode(ENCODING))
+    return io.TextIOWrapper(in_stream, encoding=ENCODING)
 
 
 def test_persist_messages_csv_header(config_header, valid_message_stream_header, tmpdir):

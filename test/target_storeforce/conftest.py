@@ -1,3 +1,5 @@
+import json
+
 from unittest.mock import patch
 
 from pytest import fixture
@@ -19,34 +21,33 @@ def patch_and_parse_args(monkeypatch, config_file):
 @fixture
 def config_header(monkeypatch, tmpdir):
     return patch_and_parse_args(monkeypatch, "test/fixtures/config-header.json")
-    # monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header.json"])
-    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_no_header(monkeypatch, tmpdir):
     return patch_and_parse_args(monkeypatch, "test/fixtures/config-no-header.json")
-    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_no_header_multistream(monkeypatch, tmpdir):
     return patch_and_parse_args(monkeypatch, "test/fixtures/config-no-header-multistream.json")
-    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture
 def config_header_jsonl(monkeypatch, tmpdir):
     return patch_and_parse_args(monkeypatch, "test/fixtures/config-header-jsonl.json")
-    # monkeypatch.setattr("sys.argv", ["pytest", "--config", "test/fixtures/config-header-jsonl.json"])
-    # return utils.parse_args(REQUIRED_CONFIG_KEYS)
 
 
 @fixture(autouse=True, scope="function")
 def sftp_client(monkeypatch):
     # overwrite the client so we never actually try to connect to an sftp
     with patch("paramiko.SFTPClient.from_transport"), patch("paramiko.Transport"):
-        yield sftp_connection({"host": "", "username": ""})
+        # using a known-good config so that the sftp_connection doesn't bork
+        valid_config_file = "test/fixtures/config-header.json"
+        with open(valid_config_file) as handle:
+            config = json.load(handle)
+            yield sftp_connection(config)
+
 
 @fixture
 def invalid_message_stream_misordered():
@@ -54,11 +55,18 @@ def invalid_message_stream_misordered():
 {"type": "STATE", "value": { "currently_syncing": "abc"}}
 {"key_properties": ["abc"], "type": "SCHEMA", "stream": "abc", "schema": {"properties": { "xyz": {"type": ["null", "string"]}}}}"""
 
+
 @fixture
 def bad_message_stream():
     return """{"key_properties": ["abc"], "type": "SCHEMA", "stream": "abc","schema": {"properties": {"xyz": {"type": ["null", "string"]}}}}
 {"type": "RECORD", "stream": "abc", "record": ["xyz": "123"]}
 {"type": "STATE", "value": { "currently_syncing": "abc"}}"""
+
+
+@fixture
+def currently_syncing_state():
+    return """{"type": "STATE", "value": {"currently_syncing": "DATA_NONPROD-DA3-V_STOREFORCE_POS"}}"""
+
 
 @fixture
 def valid_message_stream_header():
@@ -98,6 +106,7 @@ def raw_multiple_message_stream():
 {"type": "STATE", "value": {"currently_syncing": "DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA", "bookmarks": {"DATA_NONPROD-RAW_GLOBALRETAIL-PAT_TEST": {"replication_key": "ID", "version": 1611063798969, "replication_key_value": 6}, "DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA": {"replication_key": "BATCH_ID", "version": 1611063799886, "replication_key_value": 1609867992140}}}}
 {"type": "STATE", "value": {"currently_syncing": "DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA", "bookmarks": {"DATA_NONPROD-RAW_GLOBALRETAIL-PAT_TEST": {"replication_key": "ID", "version": 1611063798969, "replication_key_value": 6}, "DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA": {"replication_key": "BATCH_ID", "version": 1611063799886, "replication_key_value": 1609867992140}}}}
 {"type": "STATE", "value": {"currently_syncing": null, "bookmarks": {"DATA_NONPROD-RAW_GLOBALRETAIL-PAT_TEST": {"replication_key": "ID", "version": 1611063798969, "replication_key_value": 6}, "DATA_NONPROD-RAW_GLOBALRETAIL-EQ_FLOW_RECOVERY_METADATA": {"replication_key": "BATCH_ID", "version": 1611063799886, "replication_key_value": 1609867992140}}}}"""
+
 
 @fixture
 def raw_multiple_message_stream_with_activate_version():
