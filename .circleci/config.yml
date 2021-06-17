@@ -34,6 +34,9 @@ jobs:
             make install-poetry
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
       - run:
+          # Pulls bonobos-singer-support from Github, which requires
+          # using a machine user SSH key.  See
+          # https://circleci.com/docs/2.0/gh-bb-integration/#controlling-access-via-a-machine-user
           name: Pull dependencies
           command: make deps
       - run:
