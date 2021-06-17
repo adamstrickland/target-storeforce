@@ -8,14 +8,14 @@ workflows:
   test-and-deploy:
     jobs:
       - build-and-test:
-          name: build-and-test
           context: deg-testing
       - deploy:
-          name: deploy-package
           context: aws-data-shared-services
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - main
           requires:
             - build-and-test
 
