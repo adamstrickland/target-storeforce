@@ -42,7 +42,7 @@ def test_target_output_state_to_stream(basic_config):
 
 
 def test_target_egress_file_no_destination(path_to_file, basic_config):
-    destdir=DEFAULT_DESTINATION_FOLDER
+    destdir = DEFAULT_DESTINATION_FOLDER
     destfile = os.path.basename(path_to_file)
     with patch(PATCH_SFTP) as monkey:
         Target(basic_config).egress_file(path_to_file)
@@ -92,7 +92,7 @@ def test_target_run(config_header_file, valid_message_stream_header, tmpdir):
         staging_file_path = f"{tmpdir}/{staging_file_name}"
 
         raw_data_stream = io.BytesIO(valid_message_stream_header.encode(ENCODING))
-        stream_in =  io.TextIOWrapper(raw_data_stream, encoding=ENCODING)
+        stream_in = io.TextIOWrapper(raw_data_stream, encoding=ENCODING)
 
         with open(staging_file_path, "w") as stream_out:
             with patch(PATCH_SFTP) as monkey:
