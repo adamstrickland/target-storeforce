@@ -2,17 +2,20 @@ import collections
 import csv
 import json
 import os
-import sys
-from datetime import datetime
-
 import singer
-from jsonschema import Draft4Validator
+import sys
 
 from bonobos_singer_support.sftp import sftp_connection
+from datetime import datetime
+from deprecated import deprecated
+from jsonschema import Draft4Validator
+
 
 LOGGER = singer.get_logger()
 
 
+@deprecated(version='0.1.0',
+            reason="""If not tested explicitly, should be moved to an internal function""")
 def flatten(row, parent_key=None, sep="__", column_map=None):
     items = []
     if column_map:
@@ -31,6 +34,7 @@ def flatten(row, parent_key=None, sep="__", column_map=None):
     return dict(items)
 
 
+@deprecated(version='0.1.0', reason='Left over from prior implementation')
 def output_state(state):
     line = json.dumps(state)
     LOGGER.info(f"Emitting state {line}")
@@ -118,12 +122,14 @@ def generate_csv_from_messages(messages, config, tempdir):
     return (filepath, record_count, state, filename)
 
 
+@deprecated(version='0.1.0', reason='Left over from prior implementation')
 def persist_messages_csv(messages, config, tempdir):
     (filepath, record_count, state, filename) = generate_csv_from_messages(messages, config, tempdir)
     send_file(config, filename, filepath, record_count)
     output_state(state)
 
 
+@deprecated(version='0.1.0', reason='Left over from prior implementation')
 def send_file(config, filename, file, record_count):
     path = config.get("destination_path", "/")
     LOGGER.info(f"Sending file {filename} to {path} - {record_count} rows")

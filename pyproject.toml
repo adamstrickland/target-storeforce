@@ -14,6 +14,9 @@ readme = "README.md"
 repository = "https://github.com/bonobos/target-storeforce"
 version = "0.1.0"
 
+[tool.poetry.scripts]
+target-storeforce = "target_storeforce.entrypoint:main"
+
 # For some reason, pulling dependencies from Gemfury doesn't work.  Needs more
 # investigation.
 # [[tool.poetry.source]]
@@ -24,7 +27,8 @@ version = "0.1.0"
 python = "^3.9"
 singer-python = "~5.0.12"
 simplejson = "~3.11.1"
-bonobos-singer-support = { git = "git@github.com:bonobos/bonobos-singer-support.git", branch = "agts/initial" }
+bonobos-singer-support = { git = "git@github.com:bonobos/bonobos-singer-support.git", tag = "0.1.0" }
+Deprecated = "^1.2.12"
 
 [tool.poetry.dev-dependencies]
 coverage = {extras = ["toml"], version = "^5.5"}
