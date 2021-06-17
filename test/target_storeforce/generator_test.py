@@ -44,7 +44,6 @@ def test_persist_messages_csv_no_header_file_rename(config_no_header, valid_mess
     persist_messages_csv(messages=messages, config=config_no_header.config, tempdir=tmpdir)
 
     with open(msg_file, "r") as file:
-        # assert file.readline() == "27,2019-07-27T00:00:00+00:00,2019-07-27T14:00:00+00:00,4,868.00000,5,0,0.00000,0\n"
         assert file.readline() == "27,2019-07-27T00:00:00+00:00,2019-07-27T14:00:00+00:00,4,868.0,5,0,0.0,0\n"
 
 

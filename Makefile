@@ -102,4 +102,4 @@ dist: build -dist-package -upload-package
 # problematic (immature, maybe?) when using private repositories. a task
 # for another day, perhaps
 -upload-package:
-	${poerun} twine upload dist/* --repository-url https://push.fury.io/bonobos-eng -p ""
+	# ${poerun} twine upload dist/* --repository-url https://push.fury.io/bonobos-eng -p ""
